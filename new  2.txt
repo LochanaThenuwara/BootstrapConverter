@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<root>
+	<key type="str" name="py/object">WxObjects.WxObjects</key>
+	<innerObj type="list">
+		<item type="dict">
+			<key type="str" name="py/object">WxObjects.WxObjects</key>
+			<innerObj type="list"></innerObj>
+			<type type="str">wxButton</type>
+			<features type="list">
+				<item type="str">wxID_EXIT</item>
+				<item type="str">wxT(&quot;Quit&quot;)</item>
+				<item type="str">wxPoint(20,20)</item>
+			</features>
+			<name type="str">button1</name>
+		</item>
+		<item type="dict">
+			<key type="str" name="py/object">WxObjects.WxObjects</key>
+			<innerObj type="list"></innerObj>
+			<type type="str">wxButton</type>
+			<features type="list">
+				<item type="str">wxID_EXIT</item>
+				<item type="str">wxT(&quot;Save&quot;)</item>
+				<item type="str">wxPoint(20,60)</item>
+			</features>
+			<name type="str">button2</name>
+		</item>
+	</innerObj>
+	<type type="str">wxPanel</type>
+	<features type="list">
+		<item type="str">wxID_ANY</item>
+	</features>
+	<name type="str">panel</name>
+</root>

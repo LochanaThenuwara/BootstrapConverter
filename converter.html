@@ -8,58 +8,80 @@
 <body>
 <p id="someElement"></p>
 <p id="anotherElement"></p>
- 
+<form>
 <script>
-var buttonFeatures=["wxT","wxID_EXIT","wxPoint"]
 var type;
 d= document.createElement('div');
-$.get('http://localhost/ui.xml', function(xml) {
+$('d').addClass('container');
+d1= document.createElement('div');
+$('d1').addClass('col-xs-3');
+
+
+
+$.get('http://localhost/BootstrapConverter/ui.xml', function(xml) {
 	console.log(xml);
 	xmlDoc = $.parseXML( xml );
 	$xml = $( xmlDoc );
-	console.log("-#######"+$xml.find("innerObj").find('type').text());
-	var innerObj = $xml.find("innerObj").find("item");
 	
-
+	var innerObj = $xml.find("innerObj").find("item");
+	console.log(innerObj)
+	
     innerObj.each(function(index, element){
 		var widget = $(element)
-    // get the values we want
+		console.log("innerObj found::"+widget);
+		// get the values we want
 		type  = widget.find('type').text()
-		console.log(type+index);
+		
+		
+		console.log(type+"  typeOfObject:::"+index);
 		
 		if(type=="wxButton"){
+			text = widget.find('wxT').text()
 		
-			console.log (type);
-			//var r= $('<input type="button" value="new button"/>');
-			var r= $('<button type = "button" class = "btn btn-primary">button</button>');
+			console.log(text+"  **********************************tttttttt:::"+index);
+			//var r= $('<input class="btn btn-primary" type="button" value='+text+'>');
+			var r= $('<button type = "button" class = "btn btn-primary">'+text+'</button>');
 			$(d).append(r);
 			$("body").append(d);
-			
-			//find featues
-			var feature= widget.find("features").find("item").text();
-
-			
-			
-			$(buttonFeatures).each(function(index,feature){
-				console.log(feature)
-			});
 		}
 		if(type=="wxCheckBox"){
-		
-			console.log (type);
+			text = widget.find('wxT').text()
 			//var r= $('<input type="button" value="new button"/>');
-			var r= $('<label><input type="checkbox" value="">Option 1</label>');
+			var r= $('<label><input type="checkbox" value="">'+text+'</label>');
 			$(d).append(r);
 			$("body").append(d);
-			$(buttonFeatures).each(function(index,feature){
-				
-				console.log(feature)
-			});
+			
+		}
+		if(type=="wxStaticText"){
+			text = widget.find('wxT').text()
+			//var r= $('<input type="button" value="new button"/>');
+			var r= $('<span class="label label-default">'+text+'</span>');
+			$(d).append(r);
+			$("body").append(d);
+			
+		}
+		
+		if(type=="wxTextCtrl"){
+			text = widget.find('wxT').text()
+			textType=widget.find('wxTE').text()
+			
+			console.log(textType.toLowerCase()+"33333333333333333");
+			//var r= $('<input type="button" value="new button"/>');
+			if (textType=="PASSWORD"){
+				var r= $('<input type="password" class="form-control" id="inputsm">');
+			}else{
+				var r= $('<input class="form-control" id="inputsm">');
+			}
+			
+			
+			$(d).append(r);
+			$("body").append(d);
+			
 		}
 		
 		
 // Append "RSS Title" to #someElement
-		$( "#someElement" ).append( type);
+		//$( "#someElement" ).append( type);
  
 // Change the title to "XML Title"
 //$title.text( "XML Title" );
@@ -69,6 +91,6 @@ $.get('http://localhost/ui.xml', function(xml) {
 }, 'text');
 
 </script>
-
+</form>
 </body>
 </html>

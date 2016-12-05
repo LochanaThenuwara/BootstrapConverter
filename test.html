@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<script src="jquery-3.1.1.min.js"></script>
+<script src="/bootstrap/js/bootstrap.min.js"></script>
+</head>
+<body>
+<p id="someElement"></p>
+<p id="anotherElement"></p>
+<form>
+<script>
+var type;
+d= document.createElement('div');
+$(d).addClass('container');
+//$(d).addClass('col-sm-6 col-md-4 col-lg-2');
+
+$(d).css({"width":"450px"});
+
+$.get('http://localhost/BootstrapConverter/ui.xml', function(xml) {
+	console.log(xml);
+	xmlDoc = $.parseXML( xml );
+	$xml = $( xmlDoc );
+	
+	var item="root>innerObj>item"
+	var txt=">type"
+	var obj=$xml.find(item)
+	//console.log($(obj).text()+"--------obj-----start")
+	
+	var objType=$xml.find(item+txt)
+	//console.log($(objType).text()+"--------loopType-----start")
+	
+	while ($(objType).eq(0).text()== "wxBoxSizer") {
+		$(obj).each(function(index, objs){
+			var direction=  $(objs).find(">direction")
+			var align= $(objs).find(">align")
+			console.log($(objs).text()+"----obj----"+index)
+			
+			
+			$(direction).each(function(index, direct){
+				if ($(direct).text()=="wxVERTICAL"){
+					xxx=document.createElement('div');
+					$(xxx).css({"display":"inline-block", "width":"250px","height":"75px","margin":"10px"});
+					//$(xxx).addClass('col-xs-6');
+					$(d).append(xxx);
+					
+	/*$(xxx).addClass('form-group');
+					$(xxx).attr("display","inline-block");
+					$(xxx).attr("width","150px");
+					$(xxx).attr("height","75px");
+					$(xxx).attr("margin","10px");
+	display: inline-block;
+    width: 150px;
+    height: 75px;
+    margin: 10px;*/
+
+						
+					
+					//console.log("its vertical")
+				}else if($(direct).text()=="wxHORIZONTAL"){
+					xxx=document.createElement('div');
+					$(xxx).addClass("form-inline");
+					//$(xxx).addClass("container");
+					//$(xxx).addClass('col-sm-6 col-md-4 col-lg-2');
+					
+					$(xxx).css({"display":"flex","height":"30px","margin":"10px"});
+					$(d).append(xxx);	
+					//console.log("its horizontal")
+				}
+				console.log($(align).text()+"----align----")
+				if ($(align).text()=="wxALIGN_RIGHT"){
+					$(xxx).attr("class","pull-right");
+				
+				}else if ($(align).text()=="wxALIGN_LEFT"){
+					$(xxx).attr("class","pull-left");
+				
+				}
+				innerItem=">innerObj>item"
+				var innerObj=$(objs).find(innerItem);
+				var innerObjType=$(innerObj).find(">type");
+				//console.log($(innerObjType).text()+"--------innerObjtype")
+				if($(innerObjType).eq(0).text()!="wxBoxSizer"){
+					$(innerObj).each(function(index, inObj){
+						//console.log($(inObj).text()+"--------innerObj"+index)
+										
+						type=$(inObj).find(">type").text()
+						
+						if(type=="wxButton"){
+							text = $(inObj).find('wxT').text()
+						
+							console.log(text+"  **********************************buttontext"+index);
+							//var r= $('<input class="btn btn-primary" type="button" value='+text+'>');
+							var r= $('<button type = "button" style="width:100%" class = "btn btn-primary">'+text+'</button>');
+							$(xxx).append(r);
+							$(d).append(xxx);
+						}
+						if(type=="wxCheckBox"){
+							text = $(inObj).find('wxT').text()
+							//var r= $('<input type="button" value="new button"/>');
+							var r= $('<label><input type="checkbox" value="">'+text+'</label>');
+							$(xxx).append(r);
+							$(d).append(xxx);
+							
+						}
+						if(type=="wxStaticText"){
+							text = $(inObj).find('wxT').text()
+							//var r= $('<input type="button" value="new button"/>');
+							var r= $('<span class="label label-default" style="width:70px">'+text+'</span>');
+							//$(d).append(r);
+							//$("body").append(d);
+							$(xxx).append(r);
+							$(d).append(xxx);
+							
+						}
+						
+						if(type=="wxRadioButton"){
+							text = $(inObj).find('wxT').text()
+							//var r= $('<input type="button" value="new button"/>');
+							var r= $('<label><input type="radio" >'+text+'</label>');
+							//$(d).append(r);
+							//$("body").append(d);
+							$(xxx).append(r);
+							$(d).append(xxx);
+							
+						}
+						
+						if(type=="wxSpinCtrl"){
+							//var r= $('<input type="button" value="new button"/>');
+							var r= $('<div class="input-group"><span class="input-group-btn"><button type="button" class="btn btn-default" data-value="-1" data-target="#spinner2" data-toggle="spinner"><span class="glyphicon glyphicon-minus"></span></button></span><input type="text" data-ride="spinner" id="spinner2" class="form-control input-number" value="1" data-min="1" data-max="10"><span class="input-group-btn"><button type="button" class="btn btn-default" data-value="2" data-target="#spinner2" data-toggle="spinner" data-on="mousehold"><span class="glyphicon glyphicon-plus"></span></button></span></div>');
+							 
+							//$(d).append(r);
+							//$("body").append(d);
+							$(xxx).append(r);
+							$(d).append(xxx);
+							
+						}
+			
+						if(type=="wxTextCtrl"){
+							text = $(inObj).find('wxT').text()
+							textType=$(inObj).find('wxTE').text()
+							
+							console.log(textType.toLowerCase()+"33333333333333333");
+							//var r= $('<input type="button" value="new button"/>');
+							if (textType=="PASSWORD"){
+								var r= $('<input type="password" class="form-control">');
+							}else{
+								var r= $('<input class="form-control" >');
+							}
+			
+			
+							$(xxx).append(r);
+							$(d).append(xxx);
+				
+						}
+						$("body").append(d);
+						
+
+					});
+				}
+			});
+		
+				
+		});
+		
+		item= item+">innerObj>item"
+		obj= $xml.find(item)
+		objType=$xml.find(item+txt)
+	
+		
+	}
+	/*
+	var firstObj=$xml.find("root>innerObj>item")
+	var firstObjType = $xml.find("root>innerObj>item>type")
+	console.log($(firstObjType).text()+"--------type-----@@@@@@@@@@@@@@@@@@")
+	if($(firstObjType).text()=="wxBoxSizer"){
+		typeOfSizer=$xml.find("root>innerObj>item>direction")
+		//console.log($(typeOfSizer).text()+"----direction---------@@@@@@@@@@@@@@@@@@")
+		if ($(typeOfSizer).text()=="wxVERTICAL"){
+			vbox=document.createElement('div');
+			$('vbox').addClass('"form-group"');
+		}else{
+			var xxx=$("<div class='form-group'>")
+			$(d).append(xxx);
+		}
+		
+		var secondObjs=$xml.find("root>innerObj>item>innerObj>item>type")
+		console.log($(secondObjs).text()+"----2ndlevel---------@@@@@@@@@@@@@@@@@@")
+		$(secondObjs).each(function(index, type){
+			console.log($(type).text()+"----2ndlevel---------@@@@@@@@@@@@@@@@@@")
+			if($(type).text()=="wxBoxSizer"){
+				thirdObjs=$xml.find("root>innerObj>item>innerObj>item>innerObj>item>type")
+				var xxx=$("<div class='form-group'>")
+				$(d).append(xxx);
+				
+			
+			}
+		
+		
+		
+		});
+		
+		
+		
+	}
+	
+	
+	var vSizers=$xml.find("root>innerObj>item>innerObj>item>type")
+	
+	//console.log($(inner).chlildren()+"@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+
+
+	if ($(vSizers).text() != ""){
+	
+		vSizers.each(function(index, element){
+			var direction = $(element).find("direction")
+			console.log($(direction).text()+"   +++direction");
+			
+			
+			
+			if($(direction).eq(index).text()=="wxVERTICAL"){
+				console.log($(direction).text()+"   ===========direction");
+				vbox=document.createElement('div');
+				$('vbox').addClass('"form-group"');
+
+			}
+		});
+		console.log($(innerObj).find("type").text()+"   heeeeeeeeeeeeeeeee");
+		if($(innerObj).find("type").text()== "wxBoxSizer"){
+			
+		
+		}
+	
+		
+		var sizers=$xml.find("innerObj").find("innerObj").children();
+
+		
+		console.log($xml.find("innerObj").find("direction").text());
+	
+		sizers.each(function(index, element){
+			var direction = $(element).find("direction")
+			console.log($(direction).text()+"   direction");
+
+			if($(direction).text()=="wxHORIZONTAL"){
+				var xxx=$("<div class='form-group'>")
+				$(d).append(xxx);
+
+			
+				console.log("---------------------------------------------------------------------------------")
+				wxobjs = $(element).find("innerObj").find("item")
+				
+				console.log($(element).children().find("name").text()+"^^^^^^^^^^^^^^")
+				wxobjs.each(function(index, e){
+					var widget = $(e);
+					typeTag  = $(e).find('type');
+		
+					typeTag.each(function(index, typeElem){
+						type=$(typeElem).text();
+						console.log(type+"  typeOfObject:::"+index);
+			
+						if(type=="wxButton"){
+							text = widget.find('wxT').text()
+						
+							//console.log(text+"  **********************************tttttttt:::"+index);
+							var r= $('<input class="btn btn-primary" type="button" value='+text+'>');
+							//var r= $('<button type = "button" class = "btn btn-primary">'+text+'</button>');
+							$(d).append(r);
+							$("body").append(d);
+						}
+						if(type=="wxCheckBox"){
+							text = widget.find('wxT').text()
+							//var r= $('<input type="button" value="new button"/>');
+							var r= $('<label><input type="checkbox" value="">'+text+'</label>');
+							$(d).append(r);
+							$("body").append(d);
+							
+						}
+						if(type=="wxStaticText"){
+							text = widget.find('wxT').text()
+							//var r= $('<input type="button" value="new button"/>');
+							var r= $('<span class="label label-default">'+text+'</span>');
+							$(d).append(r);
+							$("body").append(d);
+							
+						}
+						
+						if(type=="wxTextCtrl"){
+							text = widget.find('wxT').text()
+							textType=widget.find('wxTE').text()
+							
+							//console.log(textType.toLowerCase()+"33333333333333333");
+							//var r= $('<input type="button" value="new button"/>');
+							if (textType=="PASSWORD"){
+								var r= $('<input type="password" class="form-control" id="inputsm">');
+							}else{
+								var r= $('<input class="form-control" id="inputsm">');
+							}
+							
+							
+							$(d).append(r);
+							$("body").append(d);
+							
+						}
+					
+					});
+
+					
+
+				});
+		
+			}
+			var xxxx=$("</div>")
+				$(d).append(xxxx);
+
+		});	
+	
+	
+	}else{
+		var innerObj = $xml.find("innerObj").find("item");
+		console.log(innerObj)
+	
+		innerObj.each(function(index, element){
+			var widget = $(element)
+			console.log("innerObj found::"+widget);
+			// get the values we want
+			type  = widget.find('type').text()
+			
+			
+			console.log(type+"  typeOfObject:::"+index);
+		
+			if(type=="wxButton"){
+				text = widget.find('wxT').text()
+			
+				console.log(text+"  **********************************tttttttt:::"+index);
+				var r= $('<input class="btn btn-primary" type="button" value='+text+'>');
+				//var r= $('<button type = "button" class = "btn btn-primary">'+text+'</button>');
+				$(d).append(r);
+				$("body").append(d);
+			}
+			if(type=="wxCheckBox"){
+				text = widget.find('wxT').text()
+				//var r= $('<input type="button" value="new button"/>');
+				var r= $('<label><input type="checkbox" value="">'+text+'</label>');
+				$(d).append(r);
+				$("body").append(d);
+				
+			}
+			if(type=="wxStaticText"){
+				text = widget.find('wxT').text()
+				//var r= $('<input type="button" value="new button"/>');
+				var r= $('<span class="label label-default">'+text+'</span>');
+				$(d).append(r);
+				$("body").append(d);
+				
+			}
+			
+			if(type=="wxTextCtrl"){
+				text = widget.find('wxT').text()
+				textType=widget.find('wxTE').text()
+				
+				console.log(textType.toLowerCase()+"33333333333333333");
+				//var r= $('<input type="button" value="new button"/>');
+				if (textType=="PASSWORD"){
+					var r= $('<input type="password" class="form-control" id="inputsm">');
+				}else{
+					var r= $('<input class="form-control" id="inputsm">');
+				}
+			
+			
+				$(d).append(r);
+				$("body").append(d);
+				
+			}
+		
+		});
+	
+	}*/
+   
+}, 'text');
+
+</script>
+</form>
+</body>
+</html>
